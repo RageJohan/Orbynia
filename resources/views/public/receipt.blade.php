@@ -24,14 +24,17 @@
                 <div><dt>Consumidor</dt><dd>{{ $complaint->first_name }} {{ $complaint->last_name }}</dd></div>
                 <div><dt>Documento</dt><dd>{{ $complaint->document_type }} {{ $complaint->document_number }}</dd></div>
                 @if($complaint->is_minor)
-                    <div><dt>Representante</dt><dd>{{ $complaint->guardian_name }} · {{ $complaint->guardian_document }}</dd></div>
+                    <div><dt>Representante</dt><dd>{{ $complaint->guardian_name }}</dd></div>
+                    @if($complaint->guardian_address)<div><dt>Domicilio del representante</dt><dd>{{ $complaint->guardian_address }}</dd></div>@endif
+                    @if($complaint->guardian_phone)<div><dt>Teléfono del representante</dt><dd>{{ $complaint->guardian_phone }}</dd></div>@endif
+                    @if($complaint->guardian_email)<div><dt>Correo del representante</dt><dd>{{ $complaint->guardian_email }}</dd></div>@endif
                 @endif
                 <div><dt>Domicilio</dt><dd>{{ $complaint->address }}</dd></div>
                 <div><dt>Correo</dt><dd>{{ $complaint->email }}</dd></div>
                 <div><dt>Teléfono</dt><dd>{{ $complaint->phone }}</dd></div>
                 <div><dt>Tipo de registro</dt><dd>{{ ucfirst($complaint->complaint_type) }}</dd></div>
-                <div><dt>Bien o servicio</dt><dd>{{ ucfirst($complaint->item_type) }}: {{ $complaint->item_description }}</dd></div>
-                <div><dt>Monto</dt><dd>S/ {{ number_format((float) $complaint->amount, 2, ',', ' ') }}</dd></div>
+                <div><dt>Producto o servicio reclamado</dt><dd>{{ $complaint->item_description }}</dd></div>
+                <div><dt>Monto del producto o servicio</dt><dd>{{ $complaint->amount !== null ? 'S/ '.number_format((float) $complaint->amount, 2, ',', ' ') : 'No indicado / no aplica' }}</dd></div>
                 <div><dt>Detalle</dt><dd>{{ $complaint->description }}</dd></div>
                 <div><dt>Solicitud</dt><dd>{{ $complaint->requested_resolution }}</dd></div>
                 <div><dt>Acciones del proveedor</dt><dd>{{ $complaint->provider_actions ?: 'Pendiente de atención y respuesta al consumidor.' }}</dd></div>

@@ -384,3 +384,106 @@ section[id]{scroll-margin-top:96px}
     .hero-stars::before,.hero-stars::after,.trust-flow::before{animation:none}
     .flow-step,.site-header,.brand-link .brand-logo{transition:none}
 }
+
+.minor-block{border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:4px;background:#fcfafd}
+.minor-option{display:flex;align-items:flex-start;gap:11px;margin:0;font-size:12px;font-weight:700;line-height:1.5;cursor:pointer}
+.minor-option input{flex:none;width:16px;height:16px;margin:2px 0 0;accent-color:var(--purple)}
+.minor-help{margin:8px 0 0 27px;font-size:11px;line-height:1.6;color:var(--muted)}
+.minor-fields{margin-top:17px}
+.minor-fields[hidden]{display:none}
+.legal-callout{margin:23px 0 30px;padding:25px;border:1px solid #eaddee;border-radius:16px;background:#faf5fc}
+.legal-callout h3{margin:0 0 9px;font-size:18px;color:var(--purple)}
+.legal-callout p{margin:0 0 19px}
+.legal-callout .button{color:#fff;text-decoration:none}
+@media(max-width:480px){.minor-block{padding:15px}.minor-help{margin-left:0}}
+
+.field-hint{margin:7px 0 0;color:var(--muted);font-size:11px;line-height:1.55}
+
+.minor-block{margin-top:0;padding:2px 0 0;border:0;border-radius:0;background:transparent}
+.minor-option{font-size:11px;font-weight:600;color:var(--muted)}
+.minor-option input{width:15px;height:15px}
+.minor-fields{margin-top:16px;padding:20px;border:1px solid var(--line);border-radius:12px;background:#fcfafd}
+.minor-fields-title{margin:0;color:var(--purple);font:700 12px 'Montserrat',Arial,sans-serif}
+
+/* Solicitudes comerciales y Panel de MINKA */
+.plans-section{background:#faf7fc}
+.plans-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:42px}
+.plan-card{display:flex;flex-direction:column;min-height:295px;padding:32px;border:1px solid #e8dced;border-radius:22px;background:#fff;box-shadow:0 15px 38px rgba(52,22,70,.055)}
+.plan-card-featured{border-color:#8245a1;background:linear-gradient(155deg,#fbf5ff,#fff)}
+.plan-card>span{font:700 10px 'Montserrat',Arial,sans-serif;letter-spacing:.15em;color:var(--purple)}
+.plan-card h3{margin:24px 0 12px;font-size:26px;color:var(--ink)}
+.plan-card p{margin:0 0 30px;line-height:1.65;color:var(--muted)}
+.plan-card a{margin-top:auto;color:var(--purple);font-weight:700;text-decoration:none}
+.plans-note{margin:20px 0 0;color:var(--muted);font-size:12px}
+.wizard-progress{display:flex;gap:8px;margin:18px 0 25px}
+.wizard-progress span{flex:1;padding:10px 6px;border-bottom:2px solid #e6dbe9;color:var(--muted);font-size:11px;text-align:center}
+.wizard-progress span.active{border-color:var(--orange);color:var(--purple);font-weight:700}
+.wizard-step{border:0;margin:0;padding:0;min-width:0}
+.wizard-step[hidden]{display:none}
+.wizard-step legend{margin-bottom:20px;color:var(--purple);font:700 18px 'Montserrat',Arial,sans-serif}
+.wizard-actions{display:flex;gap:12px;align-items:center;justify-content:flex-end;margin-top:28px}
+.wizard-actions [hidden]{display:none}
+.button-outline{background:#fff;color:var(--purple);border:1px solid #d8c5e0}
+.plan-options{display:grid;gap:12px;margin-top:19px}
+.plan-option{display:flex;align-items:center;gap:13px;padding:18px;border:1px solid #e6dbea;border-radius:14px;cursor:pointer}
+.plan-option:has(input:checked){border-color:var(--purple);background:#faf5fc}
+.plan-option input{accent-color:var(--purple)}
+.plan-option strong,.plan-option small{display:block}
+.plan-option small{margin-top:4px;color:var(--muted)}
+.slug-input{display:flex;align-items:center;overflow:hidden;border:1px solid #ded1e4;border-radius:10px}
+.slug-input input{border:0;min-width:0;flex:1}
+.slug-input span{padding:0 14px;color:var(--muted);font-size:12px;white-space:nowrap}
+.panel-body{background:#f6f2f8;color:#25152d;font-family:'Montserrat',Arial,sans-serif}
+.panel-login{width:min(440px,calc(100% - 32px));margin:8vh auto;padding:36px;border-radius:22px;background:white;box-shadow:0 18px 60px rgba(49,18,70,.12)}
+.panel-login h1{font-size:25px;margin:26px 0 8px}
+.panel-login p{line-height:1.6;color:#6a5a73}
+.panel-login form{display:grid;gap:10px;margin-top:20px}
+.panel-login input,.panel-detail input,.panel-detail textarea,.panel-main select{width:100%;padding:11px;border:1px solid #d9cfe0;border-radius:9px;background:white}
+.panel-login button{margin-top:15px}
+.panel-header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px max(24px,calc((100vw - 1200px)/2));background:#30143e;color:white}
+.panel-header a,.panel-header button{color:white;background:transparent;border:0;cursor:pointer}
+.panel-main{max-width:1200px;margin:0 auto;padding:38px 24px 80px}
+.panel-main>section{margin-top:36px}
+.panel-main h1{font-size:32px}
+.panel-main h2{font-size:21px}
+.panel-table-wrap{overflow-x:auto;background:#fff;border:1px solid #ebdfef;border-radius:14px}
+.panel-main table{width:100%;border-collapse:collapse;text-align:left}
+.panel-main th,.panel-main td{padding:14px;border-bottom:1px solid #eee4f1;vertical-align:top;font-size:12px}
+.panel-main th{color:#633a74;background:#fcf9fd}
+.panel-main td small{color:#75697b}
+.panel-main td form{display:flex;gap:8px}
+.panel-main td select{width:auto}
+.panel-card{padding:24px;background:white;border:1px solid #ebdfef;border-radius:16px}
+.panel-card form{display:grid;gap:12px;max-width:700px}
+.panel-card fieldset{border:1px solid #e8dced;border-radius:12px;padding:15px}
+.panel-check{display:flex;gap:10px;align-items:center;margin:7px 0}
+.panel-check input{width:auto}
+@media(max-width:760px){.plans-grid{grid-template-columns:1fr}.panel-main{padding:25px 15px}.wizard-progress span{font-size:9px}}
+
+/* Acceso central: el ERP conserva la autenticación de cada empresa. */
+.site-nav .nav-access{font-weight:700;color:var(--purple)}
+.site-header[data-tone="dark"] .site-nav .nav-access{color:#fff}
+.hero-footnote a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.access-section{min-height:690px;padding:115px 0 125px;background:radial-gradient(circle at 89% 8%,rgba(242,148,0,.11),transparent 25%),linear-gradient(155deg,#fff 15%,#f8f2fb 100%)}
+.access-shell{max-width:1120px}
+.access-heading{max-width:720px;margin-bottom:42px}
+.access-heading h1{margin:14px 0 16px;color:var(--ink);font:700 clamp(36px,5vw,58px)/1.12 'Montserrat',Arial,sans-serif;letter-spacing:-.045em}
+.access-heading p{margin:0;max-width:670px;color:var(--muted);font-size:16px;line-height:1.75}
+.access-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(310px,.7fr);gap:22px;align-items:stretch}
+.access-card{padding:38px;border:1px solid #e7dceb;border-radius:24px;background:#fff;box-shadow:0 20px 60px rgba(54,21,72,.065)}
+.access-card-main{border-color:#dbc4e6}
+.access-card-new{background:linear-gradient(155deg,#f8f0fb,#fff)}
+.access-card-number{color:var(--purple);font:700 11px 'Montserrat',Arial,sans-serif;letter-spacing:.15em}
+.access-card h2{margin:19px 0 13px;color:var(--ink);font:700 clamp(22px,2.5vw,29px)/1.25 'Montserrat',Arial,sans-serif}
+.access-card p{color:var(--muted);line-height:1.7}
+.access-form{display:grid;gap:12px;margin-top:25px}
+.access-form label{color:var(--ink);font-size:13px;font-weight:700}
+.access-form input{width:100%;padding:15px 17px;border:1px solid #d8c8e2;border-radius:12px;background:#fff;font:inherit;color:var(--ink)}
+.access-form input:focus{outline:2px solid rgba(102,36,131,.24);border-color:var(--purple)}
+.access-form .button{justify-self:start;margin-top:8px}
+.access-card .access-note{margin:20px 0 0;font-size:12px;line-height:1.65}
+.access-card .access-local{margin:16px 0 0;padding:13px 16px;border-radius:12px;background:#f9f1fc;color:#553266;font-size:12px}
+.access-card-new .button{display:inline-flex;margin-top:17px;text-decoration:none}
+.access-contact{display:block;margin-top:27px;color:var(--purple);font-size:13px;font-weight:700}
+.panel-return{display:inline-block;margin-top:19px;color:var(--purple);font-size:12px;font-weight:700}
+@media(max-width:760px){.access-section{padding:70px 0 90px}.access-grid{grid-template-columns:1fr}.access-card{padding:27px}.access-heading{margin-bottom:27px}}

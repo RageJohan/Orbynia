@@ -8,10 +8,13 @@ Landing oficial de ORBYNIA para https://orbynia.com. Es una aplicación Laravel 
 - Política de privacidad, términos y condiciones.
 - Libro de Reclamaciones con registro correlativo y constancia imprimible.
 - Solicitud de eliminación de cuenta con número de seguimiento.
+- Formularios comerciales de contacto y evaluación, con verificación de correo.
+- Panel interno de MINKA para revisar solicitudes y registrar la activación manual.
+- Página `/acceder` para localizar el ERP de una empresa activa o entrar al Panel de MINKA.
 - Contacto público: info@minka360.com.
 - Recursos de marca extraídos de brand/identidad-visual.pdf. Las tipografías Montserrat y Poppins se sirven localmente.
 
-Los números y gráficos del panel de la portada son ilustrativos, no datos de un cliente real. Se retiró el acceso a empresas porque sus URL públicas aún no están definidas ni desplegadas.
+Los números y gráficos del panel de la portada son ilustrativos, no datos de un cliente real. El acceso a empresas depende de que MINKA haya marcado su instancia como activa; en local, el código `cobeles` abre el ERP local.
 
 ## Arquitectura
 
@@ -19,7 +22,9 @@ orbynia.com: esta landing y sus formularios públicos.
 
 Instancia de cada cliente: su ERP, sus usuarios, su base de datos y sus archivos.
 
-La landing no contiene credenciales ni datos operativos del ERP. Su base de datos almacena únicamente las reclamaciones y solicitudes de eliminación recibidas en el sitio público. Cada despliegue debe tener un APP_KEY propio. No compartir el archivo SQLite entre proyectos.
+La landing no almacena ni valida contraseñas del ERP. Su base de datos propia almacena reclamaciones, solicitudes de eliminación, contactos, solicitudes comerciales y las cuentas de operadores del Panel de MINKA. Los datos de representantes de menores pertenecen exclusivamente al Libro de Reclamaciones y solo se solicitan cuando se presenta una hoja en ese supuesto. Cada despliegue debe tener un APP_KEY propio. No compartir el archivo SQLite entre proyectos.
+
+APP_KEY es la clave interna de Laravel para sesiones y cifrado; no es una clave de API de Google, NubeFact ni otro proveedor. La del entorno local ya fue generada. Una instalación de producción debe generar y guardar la suya.
 
 ## Desarrollo local
 
@@ -38,10 +43,10 @@ Si el archivo .env y la base SQLite ya existen, conservarlos. APP_URL local es h
 2. Configurar .env de producción: APP_ENV=production, APP_DEBUG=false, APP_URL=https://orbynia.com, APP_TIMEZONE=America/Lima, un APP_KEY nuevo y conexión a base de datos propia de la landing. Dar permisos de escritura a storage y bootstrap/cache.
 3. Configurar un correo transaccional real para enviar acuses al consumidor y avisos a info@minka360.com. Con MAIL_MAILER=log los formularios se guardan y la constancia se imprime, pero no se envía correo.
 4. Ejecutar composer install --no-dev --optimize-autoloader, npm ci, npm run build, php artisan migrate --force y php artisan optimize.
-5. Habilitar respaldos y acceso restringido a la base de datos de reclamaciones; asignar a una persona responsable de revisar y responder los registros dentro del plazo aplicable. La web aún no incluye un panel interno de gestión.
+5. Habilitar respaldos y acceso restringido a la base de datos central; asignar personas responsables de revisar solicitudes comerciales, reclamaciones y solicitudes de eliminación. El Panel de MINKA gestiona solicitudes comerciales, pero la atención de reclamaciones y eliminación aún requiere un procedimiento operativo definido.
 6. Confirmar el texto legal final y que la política publicada describa exactamente el comportamiento de la versión de Android que se lanzará. Revisar en producción las URL públicas de privacidad, Libro de Reclamaciones, términos y solicitud de eliminación antes de registrar la web en Google Play Console.
 
-No desplegar el ERP local junto a esta aplicación. El futuro enlace de ingreso se añadirá cuando la infraestructura y direcciones de las instancias de clientes estén decididas.
+No desplegar el ERP local junto a esta aplicación. La ruta `/acceder` abre el dominio de la instancia activa en otra pestaña; cada ERP valida sus propias credenciales. El alta técnica de cada instancia la realiza manualmente un operador de MINKA. Véanse `docs/alta-manual-cliente.md` y `RESUMEN_INTEGRAL_ORBYNIA.md`.
 
 ## Carpetas principales
 

@@ -75,42 +75,41 @@
                         <input id="address" name="address" value="{{ old('address') }}" required maxlength="300">
                         @error('address')<small>{{ $message }}</small>@enderror
                     </div>
-                    <div class="field field-full">
+                    <div class="minor-block field-full">
                         <input type="hidden" name="is_minor" value="0">
-                        <label class="check-label"><input type="checkbox" name="is_minor" value="1" @checked(old('is_minor') == '1')><span>El consumidor es menor de edad</span></label>
-                    </div>
-                    <div class="field">
-                        <label for="guardian_name">Nombre del padre, madre o representante (si corresponde)</label>
-                        <input id="guardian_name" name="guardian_name" value="{{ old('guardian_name') }}" maxlength="180">
-                        @error('guardian_name')<small>{{ $message }}</small>@enderror
-                    </div>
-                    <div class="field">
-                        <label for="guardian_document">Documento del representante (si corresponde)</label>
-                        <input id="guardian_document" name="guardian_document" value="{{ old('guardian_document') }}" maxlength="40">
-                        @error('guardian_document')<small>{{ $message }}</small>@enderror
+                        <label class="minor-option" for="is_minor">
+                            <input id="is_minor" type="checkbox" name="is_minor" value="1" aria-controls="minor-fields" @checked(old('is_minor') == '1')>
+                            <span>Presento el reclamo en nombre de un menor de edad (solo si corresponde)</span>
+                        </label>
+                        <div class="minor-fields form-grid" id="minor-fields" @if(old('is_minor') != '1') hidden @endif>
+                            <p class="minor-fields-title field-full">Datos del padre, madre o representante</p>
+                            <div class="field field-full">
+                                <label for="guardian_name">Nombre completo *</label>
+                                <input id="guardian_name" name="guardian_name" value="{{ old('guardian_name') }}" maxlength="180" @if(old('is_minor') == '1') required @endif>
+                                @error('guardian_name')<small>{{ $message }}</small>@enderror
+                            </div>
+                            <div class="field field-full">
+                                <label for="guardian_address">Domicilio *</label>
+                                <input id="guardian_address" name="guardian_address" value="{{ old('guardian_address') }}" maxlength="300" @if(old('is_minor') == '1') required @endif>
+                                @error('guardian_address')<small>{{ $message }}</small>@enderror
+                            </div>
+                            <div class="field">
+                                <label for="guardian_phone">Teléfono *</label>
+                                <input id="guardian_phone" name="guardian_phone" value="{{ old('guardian_phone') }}" maxlength="32" @if(old('is_minor') == '1') required @endif>
+                                @error('guardian_phone')<small>{{ $message }}</small>@enderror
+                            </div>
+                            <div class="field">
+                                <label for="guardian_email">Correo electrónico *</label>
+                                <input id="guardian_email" name="guardian_email" type="email" value="{{ old('guardian_email') }}" maxlength="190" @if(old('is_minor') == '1') required @endif>
+                                @error('guardian_email')<small>{{ $message }}</small>@enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
             </fieldset>
             <fieldset>
                 <legend>2. Bien o servicio y solicitud</legend>
                 <div class="form-grid">
-                    <div class="field">
-                        <label for="item_type">Bien o servicio *</label>
-                        <select id="item_type" name="item_type" required>
-                            <option value="servicio" @selected(old('item_type','servicio')==='servicio')>Servicio</option>
-                            <option value="producto" @selected(old('item_type')==='producto')>Producto</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label for="amount">Monto del bien o servicio (S/) *</label>
-                        <input id="amount" type="number" min="0" max="9999999999" step="0.01" name="amount" value="{{ old('amount') }}" required>
-                        @error('amount')<small>{{ $message }}</small>@enderror
-                    </div>
-                    <div class="field field-full">
-                        <label for="item_description">Descripción del bien o servicio *</label>
-                        <textarea id="item_description" name="item_description" rows="2" required maxlength="1000">{{ old('item_description') }}</textarea>
-                        @error('item_description')<small>{{ $message }}</small>@enderror
-                    </div>
                     <div class="field field-full">
                         <label for="complaint_type">Tipo de registro *</label>
                         <select id="complaint_type" name="complaint_type" required>
@@ -121,12 +120,23 @@
                         @error('complaint_type')<small>{{ $message }}</small>@enderror
                     </div>
                     <div class="field field-full">
-                        <label for="description">Detalle de lo sucedido *</label>
+                        <label for="item_description">Producto o servicio reclamado *</label>
+                        <input id="item_description" name="item_description" value="{{ old('item_description') }}" required maxlength="1000" placeholder="Ej.: acceso a ORBYNIA, suscripción o atención recibida">
+                        @error('item_description')<small>{{ $message }}</small>@enderror
+                    </div>
+                    <div class="field field-full">
+                        <label for="amount">Monto del producto o servicio (S/, si aplica)</label>
+                        <input id="amount" type="number" min="0" max="9999999999" step="0.01" name="amount" value="{{ old('amount') }}">
+                        <p class="field-hint">Si se trata de una queja sobre la atención o desconoces el importe, déjalo vacío.</p>
+                        @error('amount')<small>{{ $message }}</small>@enderror
+                    </div>
+                    <div class="field field-full">
+                        <label for="description">Detalle del motivo del reclamo o queja *</label>
                         <textarea id="description" name="description" rows="5" required minlength="10" maxlength="10000">{{ old('description') }}</textarea>
                         @error('description')<small>{{ $message }}</small>@enderror
                     </div>
                     <div class="field field-full">
-                        <label for="requested_resolution">¿Qué solución solicitas? *</label>
+                        <label for="requested_resolution">Solución esperada *</label>
                         <textarea id="requested_resolution" name="requested_resolution" rows="3" required minlength="5" maxlength="10000">{{ old('requested_resolution') }}</textarea>
                         @error('requested_resolution')<small>{{ $message }}</small>@enderror
                     </div>

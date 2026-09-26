@@ -12,10 +12,10 @@
             <h1>Cada movimiento de tu empresa, <em>en sincronía.</em></h1>
             <p>Conecta ventas, inventario, reparto y equipos de campo en una plataforma pensada para mantener el control mientras tu negocio avanza.</p>
             <div class="hero-actions">
-                <a class="button button-primary" href="mailto:{{ $brand['contact_email'] }}?subject=Quiero%20conocer%20ORBYNIA">Solicitar una demostración <span aria-hidden="true">↗</span></a>
+                <a class="button button-primary" href="{{ route('contact.form', ['motivo' => 'demo']) }}">Solicitar una demostración <span aria-hidden="true">↗</span></a>
                 <a class="text-link" href="#plataforma">Conoce la plataforma <span aria-hidden="true">↓</span></a>
             </div>
-            <div class="hero-footnote"><span class="footnote-line"></span> Una sola visión para oficina, almacén y ruta.</div>
+            <div class="hero-footnote"><span class="footnote-line"></span> ¿Ya tienes una empresa en ORBYNIA? <a href="{{ route('access.form') }}">Ingresa aquí</a>.</div>
         </div>
         <div class="hero-visual" aria-label="Vista conceptual de la plataforma ORBYNIA">
             <div class="visual-halo"></div>
@@ -69,7 +69,7 @@
 
 <section class="section process-section" id="como-funciona">
     <div class="container process-grid">
-        <div class="process-intro"><span class="kicker">UNA FORMA DE TRABAJAR</span><h2>El mismo ritmo.<br><em>En cada etapa.</em></h2><p>Desde la planificación en oficina hasta la ejecución en campo, cada equipo encuentra la información que necesita para avanzar.</p><a class="text-link" href="mailto:{{ $brand['contact_email'] }}?subject=Consulta%20sobre%20ORBYNIA">Hablemos de tu operación <span aria-hidden="true">↗</span></a></div>
+        <div class="process-intro"><span class="kicker">UNA FORMA DE TRABAJAR</span><h2>El mismo ritmo.<br><em>En cada etapa.</em></h2><p>Desde la planificación en oficina hasta la ejecución en campo, cada equipo encuentra la información que necesita para avanzar.</p><a class="text-link" href="{{ route('contact.form', ['motivo' => 'operacion']) }}">Hablemos de tu operación <span aria-hidden="true">↗</span></a></div>
         <div class="process-list">
             <article><span>01</span><div><h3>Planifica</h3><p>Ordena productos, clientes, precios y tareas desde tu ERP.</p></div></article>
             <article><span>02</span><div><h3>Ejecuta</h3><p>Tu equipo trabaja con la información de su empresa desde la web y la app móvil.</p></div></article>
@@ -81,13 +81,24 @@
 <section class="section mobile-section" id="movilidad">
     <div class="container mobile-grid">
         <div class="mobile-visual"><div class="phone-shadow"></div><div class="phone-frame"><div class="phone-top"><span></span><img src="{{ asset('images/orbynia/isotipo.png') }}" alt="" width="30" height="30"></div><div class="phone-screen"><small>Hola, equipo</small><strong>Tu jornada<br>en movimiento.</strong><div class="phone-route"><span class="route-dot route-start"></span><span class="route-path"></span><span class="route-dot route-end"></span></div><div class="phone-task"><span>01</span><div><b>Clientes y pedidos</b><small>Información para tu ruta</small></div><span>↗</span></div><div class="phone-task"><span>02</span><div><b>Entregas</b><small>Avance de la jornada</small></div><span>↗</span></div></div></div><div class="mobile-chip">ORBYNIA <span>móvil</span></div></div>
-        <div class="mobile-copy"><span class="kicker kicker-light">ORBYNIA MÓVIL</span><h2>Tu operación también va contigo.</h2><p>La app acompaña a los equipos que trabajan fuera de la oficina. Cada colaborador accede al entorno de su empresa para consultar y registrar su trabajo durante la jornada.</p><ul><li>Acceso vinculado a la empresa.</li><li>Información comercial y operativa en campo.</li><li>Seguimiento de rutas cuando la función está activa.</li></ul><a class="button button-light" href="mailto:{{ $brand['contact_email'] }}?subject=Conocer%20ORBYNIA%20m%C3%B3vil">Conoce la solución <span aria-hidden="true">↗</span></a></div>
+        <div class="mobile-copy"><span class="kicker kicker-light">ORBYNIA MÓVIL</span><h2>Tu operación también va contigo.</h2><p>La app acompaña a los equipos que trabajan fuera de la oficina. Cada colaborador accede al entorno de su empresa para consultar y registrar su trabajo durante la jornada.</p><ul><li>Acceso vinculado a la empresa.</li><li>Información comercial y operativa en campo.</li><li>Seguimiento de rutas cuando la función está activa.</li></ul><a class="button button-light" href="{{ route('contact.form', ['motivo' => 'movil']) }}">Conoce la solución <span aria-hidden="true">↗</span></a></div>
     </div>
 </section>
 
+<section class="section plans-section" id="planes">
+    <div class="container">
+        <div class="section-heading"><div><span class="kicker">PLANES ORBYNIA</span><h2>Un punto de partida<br><em>para cada operación.</em></h2></div><p>Tres opciones referenciales. Todas incluyen acceso al ERP y a la app móvil. Módulos, duración y precio se definen con tu empresa antes de la activación.</p></div>
+        <div class="plans-grid">
+            <article class="plan-card"><span>01 / INICIO</span><h3>Inicio</h3><p>Para comenzar a ordenar los procesos principales de tu empresa.</p><a href="{{ route('evaluation.form', ['plan' => 'inicio']) }}">Solicitar evaluación <span aria-hidden="true">↗</span></a></article>
+            <article class="plan-card plan-card-featured"><span>02 / CRECIMIENTO</span><h3>Crecimiento</h3><p>Para conectar más áreas y ampliar la visibilidad de la operación.</p><a href="{{ route('evaluation.form', ['plan' => 'crecimiento']) }}">Solicitar evaluación <span aria-hidden="true">↗</span></a></article>
+            <article class="plan-card"><span>03 / INTEGRAL</span><h3>Integral</h3><p>Para conversar sobre una operación con necesidades más amplias.</p><a href="{{ route('evaluation.form', ['plan' => 'integral']) }}">Solicitar evaluación <span aria-hidden="true">↗</span></a></article>
+        </div>
+        <p class="plans-note">Presentación referencial: la selección expresa interés y no constituye contratación ni cobro.</p>
+    </div>
+</section>
 <section class="section company-section" id="empresa">
     <div class="container company-grid"><div><span class="kicker">QUIÉNES SOMOS</span><h2>Tecnología con una identidad clara.</h2></div><div><p>ORBYNIA es una plataforma de gestión empresarial desarrollada y distribuida por <strong>{{ $brand['legal_name'] }}</strong>, empresa peruana con RUC <strong>{{ $brand['ruc'] }}</strong>.</p><p>Cada empresa que contrata el servicio opera en su propia instancia y conserva la identidad de sus procesos y comprobantes.</p></div></div>
 </section>
 
-<section class="cta-section" data-header-theme="dark"><div class="container cta-inner"><div><span class="kicker kicker-light">EMPECEMOS A CONVERSAR</span><h2>Una operación mejor conectada empieza aquí.</h2><p>Cuéntanos cómo trabaja tu empresa y conversemos sobre ORBYNIA.</p></div><a class="button button-white" href="mailto:{{ $brand['contact_email'] }}?subject=Quiero%20una%20demostraci%C3%B3n%20de%20ORBYNIA">Escríbenos <span aria-hidden="true">↗</span></a></div></section>
+<section class="cta-section" data-header-theme="dark"><div class="container cta-inner"><div><span class="kicker kicker-light">EMPECEMOS A CONVERSAR</span><h2>Una operación mejor conectada empieza aquí.</h2><p>Cuéntanos cómo trabaja tu empresa y conversemos sobre ORBYNIA.</p></div><a class="button button-white" href="{{ route('contact.form', ['motivo' => 'contacto']) }}">Escríbenos <span aria-hidden="true">↗</span></a></div></section>
 @endsection

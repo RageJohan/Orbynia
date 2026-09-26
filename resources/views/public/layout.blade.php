@@ -30,8 +30,10 @@
                 <a href="{{ route('home') }}#plataforma">Plataforma</a>
                 <a href="{{ route('home') }}#como-funciona">Cómo funciona</a>
                 <a href="{{ route('home') }}#movilidad">App móvil</a>
+                <a href="{{ route('home') }}#planes">Planes</a>
                 <a href="{{ route('home') }}#empresa">Nosotros</a>
-                <a class="nav-contact" href="mailto:{{ $brand['contact_email'] }}">Contacto</a>
+                <a class="nav-access" href="{{ route('access.form') }}">Ingresar</a>
+                <a class="nav-contact" href="{{ route('contact.form') }}">Contacto</a>
             </nav>
         </div>
     </header>
@@ -51,13 +53,14 @@
                 <h2>Explorar</h2>
                 <a href="{{ route('home') }}#plataforma">Plataforma</a>
                 <a href="{{ route('home') }}#como-funciona">Cómo funciona</a>
+                <a href="{{ route('home') }}#planes">Planes</a>
+                <a href="{{ route('access.form') }}">Ingresar</a>
             </div>
             <div>
                 <h2>Información legal</h2>
-                <a href="{{ route('privacy') }}">Política de privacidad</a>
                 <a href="{{ route('terms') }}">Términos y condiciones</a>
                 <a href="{{ route('complaints.form') }}">Libro de Reclamaciones</a>
-                <a href="{{ route('deletion.form') }}">Solicitar eliminación de cuenta</a>
+                <a href="{{ route('privacy') }}">Política de privacidad</a>
             </div>
             <div class="footer-company">
                 <h2>Titular del software</h2>
