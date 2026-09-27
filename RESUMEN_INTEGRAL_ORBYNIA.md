@@ -1,5 +1,9 @@
 # ORBYNIA — resumen integral del avance
 
+**Actualización posterior (27 de septiembre de 2026):** el sistema comprueba subdominios ya asignados y reservados. Una solicitud sin correo verificado solo registra el nombre deseado; al verificar el correo se intenta reservarlo de forma única para la revisión comercial. Si otro lo tomó primero, el solicitante puede elegir otro desde el enlace de confirmación. La aprobación confirma la asignación, el rechazo libera la reserva y la activación sigue dependiendo del aprovisionamiento manual. Las referencias de este resumen a una reserva recién al aprobar describen el flujo anterior.
+
+**Seguimiento comercial y correo (27 de septiembre de 2026):** el Panel de MINKA permite asignar un responsable, etapa y próxima fecha de seguimiento a contactos y solicitudes; registrar actividades y propuestas con historial. La etapa comercial es independiente del estado de verificación, aprobación y activación. La página de solicitud muestra si el enlace de verificación se envió, falló o quedó solo en el log local; ofrece reenvío con límite de frecuencia y una página para recuperar el enlace mediante el correo registrado. El envío de propuestas sigue siendo una acción manual del operador.
+
 **Fecha de corte:** 26 de septiembre de 2026  
 **Ámbito:** landing pública, Panel de MINKA, ERP web local, app Android y plan de publicación.  
 **Criterio:** se distingue lo implementado en el equipo local de lo que todavía requiere una instancia de prueba o infraestructura pública. Este documento no contiene contraseñas ni claves.

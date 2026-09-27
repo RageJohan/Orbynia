@@ -131,10 +131,39 @@ if (evaluationForm) {
                 const response = await fetch(url, { headers: { Accept: 'application/json' } });
                 const result = await response.json();
                 if (slug.value === candidate) slugHelp.textContent = result.available
-                    ? 'Disponible de forma provisional. MINKA lo confirmará al aprobar.'
+                    ? 'Disponible por ahora. Se reservará cuando confirmes tu correo.'
                     : 'Ese subdominio no está disponible.';
             } catch {
-                slugHelp.textContent = 'Confirmaremos la disponibilidad al revisar la solicitud.';
+                slugHelp.textContent = 'Comprobaremos la disponibilidad cuando confirmes tu correo.';
+            }
+        }, 450);
+    });
+}
+
+const replacementForm = document.querySelector('[data-slug-replacement]');
+if (replacementForm) {
+    const slug = replacementForm.querySelector('#replacement-slug');
+    const help = replacementForm.querySelector('#replacement-slug-help');
+    let checkTimer;
+
+    slug.addEventListener('input', () => {
+        clearTimeout(checkTimer);
+        const candidate = slug.value;
+        if (candidate.length < 3) {
+            help.textContent = 'Escribe al menos tres caracteres para consultar disponibilidad.';
+            return;
+        }
+
+        checkTimer = setTimeout(async () => {
+            try {
+                const url = replacementForm.dataset.slugCheck.replace('__slug__', encodeURIComponent(candidate));
+                const response = await fetch(url, { headers: { Accept: 'application/json' } });
+                const result = await response.json();
+                if (slug.value === candidate) help.textContent = result.available
+                    ? 'Disponible por ahora. Se reservará al guardar.'
+                    : 'Ese subdominio no está disponible.';
+            } catch {
+                if (slug.value === candidate) help.textContent = 'Comprobaremos la disponibilidad al guardar.';
             }
         }, 450);
     });

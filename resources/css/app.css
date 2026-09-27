@@ -458,7 +458,34 @@ section[id]{scroll-margin-top:96px}
 .panel-card fieldset{border:1px solid #e8dced;border-radius:12px;padding:15px}
 .panel-check{display:flex;gap:10px;align-items:center;margin:7px 0}
 .panel-check input{width:auto}
+.panel-eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;color:#75418a}
+.panel-case-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);gap:18px;align-items:start;margin-top:24px}
+.panel-case-summary h2,.panel-history h2{margin-top:0}
+.panel-data-list{display:grid;gap:14px;margin:0}
+.panel-data-list div{display:grid;grid-template-columns:minmax(130px,.35fr) minmax(0,1fr);gap:14px;padding-bottom:12px;border-bottom:1px solid #f0e8f2}
+.panel-data-list dt{font-size:12px;font-weight:700;color:#633a74}
+.panel-data-list dd{margin:0;overflow-wrap:anywhere;white-space:pre-wrap;font-size:13px;line-height:1.55}
+.panel-history{margin-top:20px}
+.panel-history ul{display:grid;gap:10px;margin:0;padding-left:20px}
+.panel-history li{line-height:1.5}
+.panel-detail .form-alert{margin:16px 0}
+.panel-sales-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+.panel-sales-grid .panel-card{min-width:0}
+.panel-form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.panel-form-row>div{display:grid;gap:8px}
+.panel-sales-entry{padding:16px 0;border-top:1px solid #eee4f1}
+.panel-sales-entry:first-of-type{border-top:0}
+.panel-sales-entry h3{font-size:16px;margin:0 0 8px}
+.panel-sales-entry p{margin:6px 0;line-height:1.5;overflow-wrap:anywhere}
+.panel-sales-entry small{font-size:11px;color:#75697b}
+.panel-preserve-lines{white-space:pre-wrap}
+.panel-inline-form{display:flex!important;flex-wrap:wrap;align-items:center;gap:8px!important;max-width:none!important;margin-top:12px}
+.panel-inline-form select{width:auto;min-width:170px}
+.panel-inline-form button{padding:10px 14px;border:1px solid #d9cfe0;border-radius:9px;background:#fff;cursor:pointer}
+.panel-overdue{font-weight:700;color:#9b2525}
 @media(max-width:760px){.plans-grid{grid-template-columns:1fr}.panel-main{padding:25px 15px}.wizard-progress span{font-size:9px}}
+@media(max-width:850px){.panel-case-grid{grid-template-columns:1fr}.panel-data-list div{grid-template-columns:1fr;gap:4px}}
+@media(max-width:850px){.panel-sales-grid{grid-template-columns:1fr}}
 
 /* Acceso central: el ERP conserva la autenticación de cada empresa. */
 .site-nav .nav-access{font-weight:700;color:var(--purple)}

@@ -29,11 +29,12 @@
                 <div class="field"><label for="evaluation-first">Nombre *</label><input id="evaluation-first" name="first_name" value="{{ old('first_name') }}" required maxlength="100" autocomplete="given-name"></div>
                 <div class="field"><label for="evaluation-last">Apellidos *</label><input id="evaluation-last" name="last_name" value="{{ old('last_name') }}" required maxlength="100" autocomplete="family-name"></div>
                 <div class="field field-full"><label for="evaluation-email">Correo de trabajo *</label><input id="evaluation-email" name="email" type="email" value="{{ old('email') }}" required maxlength="190" autocomplete="email"></div>
-                <div class="field field-full"><label for="evaluation-slug">Subdominio deseado *</label><div class="slug-input"><input id="evaluation-slug" name="requested_slug" value="{{ old('requested_slug') }}" required minlength="3" maxlength="40" pattern="[a-z0-9][a-z0-9-]{1,38}[a-z0-9]" autocapitalize="none" spellcheck="false"><span>.orbynia.com</span></div><p id="slug-help" class="field-hint" aria-live="polite">El nombre de empresa propone una opción editable. Se confirma al aprobar la solicitud.</p></div>
+                <div class="field field-full"><label for="evaluation-slug">Subdominio deseado *</label><div class="slug-input"><input id="evaluation-slug" name="requested_slug" value="{{ old('requested_slug') }}" required minlength="3" maxlength="40" pattern="[a-z0-9][a-z0-9-]{1,38}[a-z0-9]" autocapitalize="none" spellcheck="false"><span>.orbynia.com</span></div><p id="slug-help" class="field-hint" aria-live="polite">El nombre de empresa propone una opción editable. Se reservará cuando confirmes tu correo, si continúa libre.</p></div>
             </div>
             <label class="check-label"><input type="checkbox" name="privacy_accept" value="1" required @checked(old('privacy_accept'))><span>He leído la <a href="{{ route('privacy') }}" target="_blank" rel="noopener">Política de privacidad</a> y acepto el tratamiento de mis datos para gestionar esta solicitud. *</span></label>
         </fieldset>
         <div class="wizard-actions"><button type="button" class="button button-outline" data-wizard-back hidden>Anterior</button><button type="button" class="button button-primary" data-wizard-next hidden>Siguiente →</button><button class="button button-primary" type="submit" data-wizard-submit>Enviar solicitud ↗</button></div>
+        <p class="field-hint">¿Ya enviaste una solicitud y no recibiste el correo? <a href="{{ route('evaluation.resend-form') }}">Pide otro enlace de confirmación</a>.</p>
     </form>
 </div></section>
 @endsection
