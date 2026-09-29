@@ -1,94 +1,122 @@
 # Estado de implementación de ORBYNIA
 
-> Documento de continuidad anterior. Para el resumen completo y el estado más reciente, consultar `RESUMEN_INTEGRAL_ORBYNIA.md`.
+> Documento de continuidad. Distingue el MVP acordado de lo que ya existe en código.
 
-**Fecha de corte:** 26 de septiembre de 2026.  
-**Propósito:** dejar un punto de continuidad sobre el flujo comercial, la creación manual de instancias y el acceso móvil.
+**Fecha de actualización:** 29 de septiembre de 2026.
 
-## 1. Problema que se está resolviendo
+## 1. Objetivo y límites del producto
 
-ORBYNIA tiene tres componentes distintos. La **landing** informa sobre el producto y recibe solicitudes comerciales. El **Panel de MINKA** permite a su equipo revisar esas solicitudes. El **ERP y la app móvil** son el producto que recibe cada CLIENTE/EMPRESA, con una instancia del ERP, bases de datos y archivos propios.
+La landing `orbynia.com` presenta ORBYNIA como producto (ERP web y app móvil), recibe consultas y solicitudes, y permite a MINKA 360 S.A.C. coordinarlas desde un panel. La landing usa su propia base central para las solicitudes y su seguimiento.
 
-Los botones de la landing enviaban al visitante a redactar un correo. Eso impedía registrar, ordenar y seguir solicitudes desde un panel. Además, era necesario definir cómo el operador entregaría la instancia sin mezclar los datos comerciales centrales con los datos del cliente.
+Cada CLIENTE/EMPRESA recibe después una instancia propia del ERP, con base de datos y archivos independientes. La landing no inicia sesión en esa instancia, no envía datos comerciales al ERP y no aprovisiona instancias automáticamente. MINKA crea la instancia manualmente y configura en ella el plan solicitado.
 
-## 2. Decisiones aprobadas
+**CLIENTE/EMPRESA:** quien solicita el servicio. **ADMIN:** primer usuario con rol administrador en el ERP de una empresa. **Operador MINKA:** quien atiende solicitudes, verifica pagos y prepara instancias.
 
-- **CLIENTE/EMPRESA:** empresa que solicita contratar ORBYNIA.
-- **ADMIN:** primer usuario administrador dentro de la instancia ERP de ese cliente.
-- **Panel de MINKA:** área interna prevista en `admin.orbynia.com` para revisar solicitudes; no es el ERP del cliente.
-- La landing recibe la solicitud y el Panel de MINKA la revisa. **Aprobar una solicitud no crea la instancia automáticamente.**
-- El operador de MINKA crea y configura manualmente la instancia aislada; después ejecuta los comandos de configuración y creación del ADMIN y marca la solicitud como activa.
-- Por decisión posterior del usuario, el código base de ORBYNIA se desarrolla en el **ERP local actual**. La copia separada se archivó después de trasladar y comparar los archivos; ya no es una carpeta de trabajo activa.
-- El subdominio solicitado pertenece a la instancia del cliente, por ejemplo `empresa.orbynia.com`. La app móvil selecciona esa empresa antes del inicio de sesión.
+## 2. Flujo MVP acordado
 
-## 3. Flujo previsto
+### Solicitar el servicio
 
-```text
-Visitante en orbynia.com
-  → formulario de contacto o solicitud de evaluación
-  → solicitud guardada en la base central de la landing
-  → verificación de correo mediante enlace
-  → operador revisa y aprueba desde el Panel de MINKA
-  → operador crea manualmente servidor, bases, archivos, HTTPS y subdominio
-  → operador configura la instancia ERP y crea su primer ADMIN
-  → invitación por correo para establecer contraseña
-  → operador marca la solicitud como activa
-  → CLIENTE/EMPRESA usa su ERP y la app móvil con su propio subdominio
-```
+1. La landing explica el ERP web y la app móvil y presenta los planes con sus precios, módulos y límites.
+2. La persona elige un plan y pulsa el botón de ese plan.
+3. El formulario solicita teléfono, nombre de la empresa, nombres, apellidos, correo, subdominio deseado y aceptación de términos y política de privacidad. El plan seleccionado se conserva como dato de la solicitud; no se vuelve a pedir que lo elija.
+4. La landing valida y guarda la solicitud en su base central. La confirmación de correo puede mantenerse para verificar que la dirección funciona.
+5. MINKA revisa la solicitud y se comunica con el cliente para confirmar el alcance y los siguientes pasos.
 
-La solicitud comercial no crea una cuenta en el ERP. El formulario de evaluación no pide contraseña. La contraseña del ADMIN se establece mediante una invitación de un solo uso después de que el operador haya preparado la instancia.
+### Pago manual y alta del ERP
 
-## 4. Cambios realizados y ubicación
+1. MINKA comunica al cliente cómo pagar el plan acordado. No hay pasarela ni cobro automático.
+2. El cliente informa el número de operación, fecha y monto. La captura del comprobante puede ser opcional; si se recibe, se guarda en almacenamiento privado.
+3. MINKA verifica el pago manualmente con su entidad financiera y registra el resultado en la solicitud.
+4. Tras verificarlo, el operador crea manualmente la instancia, su base de datos, archivos, HTTPS y subdominio; ejecuta la configuración del ERP, aplica módulos y límites del plan y crea al primer ADMIN.
+5. MINKA registra la instancia como activa y comunica al ADMIN cómo acceder. El cliente inicia sesión en su propio subdominio y selecciona su empresa en la app móvil.
+
+El registro del plan y el pago sirve para coordinar la operación desde la landing. No configura ni modifica automáticamente el ERP.
+
+### Devoluciones y Libro de Reclamaciones
+
+- La landing debe permitir solicitar una devolución y registrar el pedido en la base central. MINKA revisa el caso y coordina manualmente cualquier devolución; el sitio no transfiere dinero.
+- El Libro de Reclamaciones recibe quejas y reclamos y genera una constancia. MINKA los gestiona en el panel.
+- La solicitud de eliminación de cuenta ya existe. Mantenerla como tipo de atención en el panel salvo decisión posterior de retirarla.
+
+## 3. Planes comerciales por definir
+
+No publicar como definitivos los planes ni sus precios hasta que MINKA apruebe su alcance. Para cada plan hay que decidir:
+
+- Nombre y precio.
+- Periodo de cobro y duración del servicio.
+- Módulos habilitados en el ERP y funciones incluidas en la app móvil.
+- Límites de clientes, pedidos por mes, usuarios u otros recursos que se decida limitar.
+- Qué ocurre al superar límites, y si existe prueba o periodo de evaluación.
+
+Para el MVP basta un catálogo informativo sencillo en la landing (por ejemplo, configuración mantenida por el equipo). No hace falta crear ahora una administración de planes ni conectar el catálogo al ERP. La solicitud debe guardar qué plan eligió el cliente; MINKA lo aplica manualmente al aprovisionar.
+
+## 4. Estado actual del código
 
 ### Landing y Panel de MINKA
 
 **Carpeta:** `C:\Users\venta\OneDrive\Escritorio\orbynia-landing`
 
-- Migración `database/migrations/2026_09_26_000004_create_commercial_flow.php`: usuarios operadores, prospectos, solicitudes y eventos.
-- `app/Http/Controllers/CommercialController.php`: contacto, evaluación, disponibilidad de subdominio y verificación de correo.
-- `app/Http/Controllers/MinkaPanelController.php`: acceso del operador, revisión, aprobación, rechazo y activación registrada.
-- Comando `app/Console/Commands/CreateMinkaOperator.php` para crear un usuario operador.
-- Vistas de formularios, acceso y panel en `resources/views/`; rutas en `routes/web.php`; estilos y comportamiento en `resources/css/app.css` y `resources/js/app.js`. La página `/acceder` orienta por código de empresa o correo y abre la instancia en otra pestaña; las contraseñas del ERP se ingresan solo en esa instancia.
-- Los botones comerciales de la página principal llevan ahora a formularios; se añadieron planes de referencia.
-- El Panel de MINKA registra al activar una empresa el correo del primer ADMIN para localizar su dominio desde `/acceder`. El correo o nombre de un operador interno conduce al login del Panel de MINKA. En local, el código `cobeles` abre `http://127.0.0.1:8000`. Guía operativa: `docs/alta-manual-cliente.md`.
-- Las migraciones locales de la landing, incluida la columna `admin_email`, se ejecutaron; la sintaxis PHP, las vistas y la compilación de recursos se comprobaron. El correo local usa el transportador `log`, por lo que la entrega real requiere SMTP.
+- Laravel con Blade/Vite; las páginas públicas, formularios y el Panel de MINKA se ejecutan en la misma aplicación y usan la base central de la landing.
+- Existen formularios de contacto y evaluación/solicitud, verificación de correo, consulta de disponibilidad del subdominio, términos, privacidad, Libro de Reclamaciones y solicitud de eliminación de cuenta.
+- El flujo de solicitud actual todavía se llama evaluación y contempla reserva de subdominio, aprobación, módulos y activación manual. No representa aún el flujo comercial final con planes y pago informado.
+- Todavía no existe el reporte de número de operación/comprobante ni un estado de pago verificado en el panel. Tampoco existe formulario de devolución.
+- El Panel de MINKA se simplificó a dos secciones: **Gestión comercial** (contactos, demostraciones, evaluaciones y seguimientos en una lista) y **Atención legal** (reclamaciones y eliminación de cuenta en una lista). La pantalla inicial usa tarjetas visuales con iconos y botones explícitos; cada tarjeta abre su sección.
+- Vistas nuevas: `resources/views/panel/commercial.blade.php` y `resources/views/panel/legal.blade.php`; inicio simplificado en `resources/views/panel/dashboard.blade.php`. Rutas locales: `/panel-minka/comercial` y `/panel-minka/atencion-legal`.
+- Se comprobó sintaxis PHP y registro de rutas. Los recursos se compilaron con npm run build; no se ejecutó una suite de pruebas y la revisión visual integrada no estuvo disponible en esta sesión.
+- El correo local usa el transportador `log`; la entrega real requiere configurar SMTP.
+
+#### Favicon e identidad visual
+
+- El panel muestra el logotipo oficial completo. Para los favicons se preparó una variante basada en el isotipo negativo, con fondo violeta de esquinas redondeadas y el símbolo ampliado para tamaños pequeños.
+- `resources/views/partials/favicon.blade.php` centraliza los enlaces y está incluido en las nueve vistas que tienen `<head>`.
+- Recursos generados en `public/images/orbynia/`: `isotipo-negativo.png` y `isotipo-favicon-16.png`, `isotipo-favicon-32.png`, `isotipo-favicon-48.png`, `isotipo-favicon-64.png`, `isotipo-favicon-128.png` y `isotipo-favicon-180.png`. `public/favicon.ico` contiene tamaños 16, 32, 48 y 64 px. El isotipo positivo original se conserva.
+- Se limpió la caché de vistas de Laravel después de actualizar los enlaces.
+- **Problema pendiente:** el usuario informa que el favicon aún se ve extraño en la pestaña real y que el símbolo no se distingue bien a tamaño reducido. La variante actual no se considera aprobada; habrá que revisarla de nuevo visualmente antes del despliegue. La herramienta de navegador integrado no inició en esta sesión, así que el estado se registra según la captura y observación del usuario.
 
 ### Código base ERP de ORBYNIA
 
-**Carpeta principal:** `C:\xampp\htdocs\CobelesApp\cobelesapp`  
-**Copia anterior:** worktree de ORBYNIA archivado por Codex; sus cambios quedaron incorporados en la carpeta principal.
+**Carpeta:** `C:\xampp\htdocs\CobelesApp\cobelesapp`
 
-- Migración `database/migrations/2026_09_26_000001_prepare_orbynia_tenant_access.php` para campos del ADMIN y estado de la instancia.
-- `app/Console/Commands/ConfigureTenantAccessCommand.php`: comando `minka:configure-instance` para registrar subdominio, estado, vencimiento y módulos.
-- `app/Console/Commands/CreateTenantAdminCommand.php`: comando `minka:create-admin` para el primer ADMIN e invitación de contraseña.
-- `app/Http/Middleware/EnsureTenantAccess.php` y `bootstrap/app.php`: control de acceso de instancia, habilitado mediante `ORBYNIA_TENANT_MODE=true`. Se amplió la cobertura de rutas de pedidos, GPS, logística, vehículos y API.
-- Ajustes de autenticación, recuperación de contraseña, correo, configuración y rutas; se retiró el registro público del ERP. `database/seeders/OrbyniaPermissionSeeder.php` instala 167 permisos genéricos desde `database/seeders/data/orbynia_permissions.json` en cada instancia nueva, sin copiar usuarios ni operaciones de Cobeles.
-- El 26/09/2026 se trasladaron 18 archivos de ORBYNIA al ERP local actual por petición del usuario. Antes del traslado, el repositorio local estaba limpio y ambos proyectos partían del mismo commit. Se compararon los 18 archivos por SHA-256: ninguna diferencia. Se aplicó la migración ORBYNIA a la base local `cobeles_erp`. El modo de instancia sigue desactivado en la configuración local.
+- El usuario decidió desarrollar los cambios en el ERP local actual, no en una copia separada.
+- Existen `minka:configure-instance` para registrar subdominio, estado, vencimiento y módulos, y `minka:create-admin` para crear al primer ADMIN y enviar una invitación para establecer contraseña.
+- Existe middleware de control de instancia, configuración de tenant y seeder de permisos. El modo de tenant sigue desactivado en el entorno Cobeles local.
+- La configuración de una empresa debe ejecutarse manualmente en una instancia/base independiente. No se ha demostrado aún una alta completa de punta a punta en una base nueva.
 
 ### App móvil Android
 
 **Carpeta:** `C:\Users\venta\AndroidStudioProjects\Cobeles`
 
-- `TenantSettings.kt`: guarda la empresa seleccionada y construye su URL `https://subdominio.orbynia.com/api/`.
-- `RetrofitClient.kt`: dirige las peticiones a la instancia seleccionada.
-- `LoginActivity.kt`: selector de empresa y consulta de `/api/instance-info` antes del inicio de sesión.
-- Ajustes de pantalla de login y Gradle para la URL de desarrollo. El identificador de aplicación aprobado previamente es `com.orbynia.movil`.
+- La app permite elegir empresa y construye la URL de API con su subdominio ORBYNIA.
+- El identificador de aplicación aprobado es `com.orbynia.movil`.
+- `assembleDebug` compiló el 26/09/2026; falta probar acceso contra una instancia real publicada.
 
-## 5. Pendientes antes de usarlo en producción
+## 5. Pendientes para completar el MVP
 
-1. **Base inicial del ERP:** el volcado MySQL contiene 103 tablas y 10 entradas de migraciones, pero `mysqldump` mostró `unknown variable 'column-statistics=0'`; falta verificar una restauración en una base nueva antes de usarlo para clientes. Preparar también la base PostgreSQL de GPS si corresponde.
-2. **Cobertura del control de módulos:** se corrigieron rutas evidentes de pedidos, operación GPS, vehículos, transportistas, ubicaciones y configuración comercial. Falta definir el alcance comercial de compras, tesorería, finanzas y otras áreas no incluidas en los cinco módulos aprobables; después completar su control y revisar rutas compartidas.
-3. **Android:** `assembleDebug` compiló correctamente con el JDK de Android Studio1. Falta probar el flujo en un dispositivo y con una instancia real publicada.
-4. **Configuración por cliente:** la migración `2026_09_26_000001_prepare_orbynia_tenant_access` ya se aplicó en el ERP local. Para cada nueva instancia faltará instalar su propia base, ejecutar sus migraciones y el seeder de permisos, y activar `ORBYNIA_TENANT_MODE=true` con el subdominio correcto. No activar este modo en Cobeles sin configurar esa instancia.
-5. **Correo real:** configurar SMTP y dominio de envío para verificación de solicitudes e invitación del ADMIN; el entorno local de la landing solo registra correos en el log.
-6. **Infraestructura y dominio:** configurar DNS, HTTPS y alojamiento para `orbynia.com`, `admin.orbynia.com` y los subdominios de clientes. No se ha desplegado el servicio público.
-7. **Operación:** ya existe un operador del Panel de MINKA en local. Falta fijar planes y precios definitivos si se cobrarán en línea, y completar el procedimiento manual de alta con credenciales aisladas y copia de seguridad.
+1. **Definir y aprobar los planes:** precios, módulos ERP/app, límites, periodo de cobro y prueba si corresponde. Hasta entonces, mantenerlos como referenciales o no publicar cifras y límites.
+2. **Alinear el formulario de solicitud:** conservar el plan elegido desde la tarjeta; pedir una sola vez teléfono, empresa, nombres, apellidos, correo y subdominio; registrar aceptación y versión de políticas. Decidir si la verificación de correo continúa en el flujo final.
+3. **Cambiar el concepto evaluación por solicitud de servicio:** revisar textos, estados y datos actuales de la evaluación, y dejar claro que la aprobación comercial no crea una cuenta ni una instancia.
+4. **Añadir reporte de pago manual:** guardar número de operación, fecha, monto y estado. Definir si se permite adjuntar comprobante; si se adjunta, limitar tipo/tamaño y almacenarlo de forma privada.
+5. **Añadir gestión del pago en el panel:** mostrar el plan elegido y los datos reportados, permitir que MINKA marque pago pendiente, reportado, verificado o rechazado y conservar un historial de cambios.
+6. **Añadir solicitud de devolución:** formulario público, referencia del pago/operación, motivo y contacto; estados de revisión y resolución manuales en el panel. No implementar reembolsos automáticos.
+7. **Ampliar la sección de atención:** incluir devoluciones junto con reclamaciones y eliminación de cuenta. Se puede cambiar el rótulo **Atención legal** por **Atención al cliente** para que describa todos esos casos sin añadir una tercera sección principal.
+8. **Actualizar textos legales y privacidad:** describir los datos reales que se recopilan en solicitudes, pagos y comprobantes, su finalidad, acceso, conservación y proceso de devolución. Revisar el contenido antes de producción.
+9. **Definir procedimiento manual de alta:** revisar el plan y pago, preparar instancia/base/archivos/subdominio, aplicar módulos y límites, crear ADMIN, enviar invitación y registrar la activación en la landing.
+10. **Configurar SMTP y desplegar:** configurar DNS/HTTPS para `orbynia.com`, `admin.orbynia.com` y subdominios de clientes; comprobar los correos en el entorno desplegado.
+11. **Probar en una instancia separada:** restaurar una base inicial limpia, completar la creación manual de una empresa, comprobar ERP y app móvil y revisar que los datos no se mezclen con Cobeles.
 
-## 6. Estado actual
+12. **Revisar el favicon antes del despliegue:** la variante violeta con isotipo negativo y varios tamaños ya está implementada, pero el usuario informa que sigue viéndose mal en su pestaña. Reexaminar el arte a 16 px y validar el resultado en el navegador real; conservar la identidad oficial y dejar el favicon pendiente de aprobación.
 
-El flujo comercial, el panel interno, los comandos base del ERP y la selección de instancia móvil están implementados en código. **Aún no hay una instancia de cliente creada ni un despliegue público.** La aprobación en el panel registra la decisión comercial; el aprovisionamiento sigue siendo una operación manual de MINKA.
+## 6. Estado al corte
 
+La landing ya centraliza las solicitudes existentes y el panel ahora presenta dos áreas de trabajo. La arquitectura objetivo queda definida: información y coordinación en la landing; cada ERP y su base de datos se crean por separado y manualmente para cada empresa.
 
+El siguiente bloque funcional del MVP es definir planes y actualizar la solicitud para conservar el plan elegido y recoger el reporte de pago manual. Después faltan las solicitudes de devolución, su gestión desde Atención al cliente y la validación operativa en una instancia independiente. El favicon tiene variantes PNG e ICO desplegables localmente, pero su apariencia en la pestaña sigue pendiente de corrección y aprobación del usuario. **No hay todavía un despliegue público ni una instancia de cliente de producción.**
 
+## 7. Referencias de implementación
 
-
+- Guía de alta manual: `docs/alta-manual-cliente.md`.
+- Migración de solicitud comercial: `database/migrations/2026_09_26_000004_create_commercial_flow.php`.
+- Controladores de landing/panel: `app/Http/Controllers/CommercialController.php`, `MinkaPanelController.php` y `SalesTrackingController.php`.
+- Rutas del panel: `routes/web.php`.
+- Favicon compartido: `resources/views/partials/favicon.blade.php`; archivos gráficos en `public/images/orbynia/isotipo-favicon-*.png` y `public/favicon.ico`.
+- Configuración del ERP y comando del ADMIN: `app/Console/Commands/ConfigureTenantAccessCommand.php` y `app/Console/Commands/CreateTenantAdminCommand.php` en el código base ERP.

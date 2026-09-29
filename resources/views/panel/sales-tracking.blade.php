@@ -6,6 +6,7 @@
     <meta name="robots" content="noindex,nofollow">
     <title>Seguimiento de {{ $companyName }} | Panel de MINKA</title>
     @vite(['resources/css/app.css'])
+    @include('partials.favicon')
 </head>
 <body class="panel-body">
 <header class="panel-header">

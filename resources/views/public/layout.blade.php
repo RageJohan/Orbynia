@@ -12,8 +12,8 @@
     <meta property="og:description" content="@yield('description', 'Una operación conectada, de la oficina al campo.')">
     <meta property="og:image" content="{{ asset('images/orbynia/logo-color.png') }}">
     <title>@yield('title', 'ORBYNIA | Gestión empresarial conectada')</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/orbynia/isotipo.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('partials.favicon')
 </head>
 <body>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>

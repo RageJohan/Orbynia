@@ -12,6 +12,8 @@ $panelRoutes = function (): void {
     Route::post('/login', [MinkaPanelController::class, 'login'])->name('minka.login.store')->middleware('throttle:5,1');
     Route::middleware('auth')->group(function (): void {
         Route::get('/', [MinkaPanelController::class, 'dashboard'])->name('minka.dashboard');
+        Route::get('/comercial', [MinkaPanelController::class, 'commercial'])->name('minka.commercial');
+        Route::get('/atencion-legal', [MinkaPanelController::class, 'legal'])->name('minka.legal');
         Route::get('/solicitudes/{id}', [MinkaPanelController::class, 'show'])->name('minka.application');
         Route::get('/seguimiento/{type}/{id}', [SalesTrackingController::class, 'show'])
             ->whereIn('type', ['contacto', 'solicitud'])->name('minka.sales.show');

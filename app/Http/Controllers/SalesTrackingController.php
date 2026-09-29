@@ -70,7 +70,7 @@ class SalesTrackingController extends Controller
                 ->orderByDesc('commercial_proposals.id')->get(),
             'backUrl' => $type === 'solicitud'
                 ? route('minka.application', $id)
-                : route('minka.dashboard').'#contactos',
+                : route('minka.commercial'),
         ]);
     }
 

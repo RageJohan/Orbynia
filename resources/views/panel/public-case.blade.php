@@ -6,6 +6,7 @@
     <meta name="robots" content="noindex,nofollow">
     <title>{{ $type === 'complaint' ? 'Reclamación' : 'Solicitud de eliminación' }} {{ $case->reference }} | Panel de MINKA</title>
     @vite(['resources/css/app.css'])
+    @include('partials.favicon')
 </head>
 <body class="panel-body">
 @php

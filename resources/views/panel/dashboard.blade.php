@@ -4,115 +4,74 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="robots" content="noindex,nofollow">
-    <title>Solicitudes | Panel de MINKA</title>
+    <title>Panel de gestión | ORBYNIA</title>
     @vite(['resources/css/app.css'])
+    @include('partials.favicon')
 </head>
-<body class="panel-body">
+<body class="panel-body panel-dashboard-body">
 <header class="panel-header">
-    <strong>ORBYNIA · Panel de MINKA</strong>
-    <form method="post" action="{{ route('minka.logout') }}">@csrf<button type="submit">Salir</button></form>
+    <strong>ORBYNIA <span aria-hidden="true">·</span> Panel de MINKA</strong>
+    <form method="post" action="{{ route('minka.logout') }}">@csrf<button type="submit">Salir <span aria-hidden="true">↗</span></button></form>
 </header>
-<main class="panel-main">
-    <h1>Gestión de ORBYNIA</h1>
-    <p>Revisa solicitudes comerciales, reclamaciones y solicitudes de eliminación. La solicitud central no crea un usuario en el ERP.</p>
+<main class="panel-main panel-dashboard-main">
+    <section class="panel-dashboard-intro">
+        <div>
+            <p class="panel-eyebrow"><span class="panel-status-dot"></span> CENTRO DE OPERACIONES</p>
+            <h1>Panel de gestión</h1>
+            <p>Selecciona un área para continuar con las solicitudes de ORBYNIA.</p>
+        </div>
+        <div class="panel-dashboard-mark">
+            <img src="{{ asset('images/orbynia/logo-color.png') }}" alt="ORBYNIA" width="210" height="60">
+        </div>
+    </section>
+
     @if(session('panel_success'))<div class="form-success" role="status">{{ session('panel_success') }}</div>@endif
     @if(session('panel_warning'))<div class="form-alert" role="status">{{ session('panel_warning') }}</div>@endif
 
-    <section id="seguimientos">
-        <h2>Seguimientos próximos o vencidos</h2>
-        <p>Se muestran las acciones con fecha hasta los próximos siete días. Abre cada ficha para registrar lo ocurrido o cambiar la fecha.</p>
-        <div class="panel-table-wrap"><table>
-            <thead><tr><th>Empresa</th><th>Origen</th><th>Próxima acción</th><th></th></tr></thead>
-            <tbody>
-            @forelse($dueFollowUps as $item)
-                <tr>
-                    <td>{{ $item->company_name }}</td>
-                    <td>{{ $item->type === 'contacto' ? 'Contacto' : 'Evaluación' }}</td>
-                    <td><span @class(['panel-overdue' => \Illuminate\Support\Carbon::parse($item->next_follow_up_at)->isPast()])>{{ \Illuminate\Support\Carbon::parse($item->next_follow_up_at)->format('d/m/Y H:i') }}</span></td>
-                    <td><a href="{{ route('minka.sales.show', [$item->type, $item->id]) }}">Gestionar</a></td>
-                </tr>
-            @empty
-                <tr><td colspan="4">No hay seguimientos próximos registrados.</td></tr>
-            @endforelse
-            </tbody>
-        </table></div>
-    </section>
+    <section class="panel-module-grid" aria-label="Áreas de gestión">
+        <article class="panel-module-card panel-module-card-commercial">
+            <div class="panel-module-card-top">
+                <div class="panel-module-icon" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" fill="none"><path d="M8 17.5h32v21H8zM5 17.5l4-9h30l4 9M17 17.5v6h14v-6M14 29h8m4 0h8M14 34h20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 8.5V5h22v3.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                </div>
+                <span class="panel-module-index">01</span>
+            </div>
+            <div class="panel-module-content">
+                <span class="panel-module-label">CLIENTES INTERESADOS</span>
+                <h2>Gestión comercial</h2>
+                <p>Contactos, demostraciones, solicitudes de servicio y sus seguimientos.</p>
+            </div>
+            <div class="panel-module-data">
+                <div class="panel-module-count"><strong>{{ $commercialCount }}</strong><span>registros recibidos</span></div>
+                <div class="panel-follow-up"><span class="panel-follow-up-icon" aria-hidden="true">↗</span><span><strong>{{ $dueFollowUpsCount }}</strong> seguimientos próximos o vencidos</span></div>
+            </div>
+            <a class="panel-module-button" href="{{ route('minka.commercial') }}">
+                <span>Abrir gestión comercial</span><span class="panel-button-arrow" aria-hidden="true">→</span>
+            </a>
+        </article>
 
-    <section id="reclamaciones">
-        <h2>Reclamaciones</h2>
-        <div class="panel-table-wrap"><table>
-            <thead><tr><th>Referencia</th><th>Consumidor</th><th>Asunto</th><th>Estado</th><th>Responsable</th><th>Fecha</th><th></th></tr></thead>
-            <tbody>
-            @forelse($complaints as $item)
-                <tr>
-                    <td>{{ $item->reference }}</td>
-                    <td>{{ $item->first_name }} {{ $item->last_name }}<br><small>{{ $item->email }}</small></td>
-                    <td>{{ ucfirst($item->complaint_type) }}<br><small>{{ \Illuminate\Support\Str::limit($item->item_description, 70) }}</small></td>
-                    <td>{{ $caseStatuses['complaint'][$item->status] ?? $item->status }}</td>
-                    <td>{{ $item->responsible_name ?: 'Sin asignar' }}</td>
-                    <td>{{ $item->created_at }}</td>
-                    <td><a href="{{ route('minka.complaint', $item->id) }}">Gestionar</a></td>
-                </tr>
-            @empty
-                <tr><td colspan="7">Todavía no hay reclamaciones.</td></tr>
-            @endforelse
-            </tbody>
-        </table></div>
-        {{ $complaints->links() }}
+        <article class="panel-module-card panel-module-card-support">
+            <div class="panel-module-card-top">
+                <div class="panel-module-icon" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" fill="none"><path d="M13 6.5h16l8 8v27H13z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M29 7v9h8M19 25h12m-12 6h12m-12 6h7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="m8 17 3 3-3 3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span class="panel-module-index">02</span>
+            </div>
+            <div class="panel-module-content">
+                <span class="panel-module-label">ATENCIÓN Y PRIVACIDAD</span>
+                <h2>Casos recibidos</h2>
+                <p>Reclamaciones y solicitudes relacionadas con eliminación de cuenta.</p>
+            </div>
+            <div class="panel-module-data">
+                <div class="panel-module-count"><strong>{{ $legalCount }}</strong><span>casos registrados</span></div>
+                <div class="panel-support-note"><span class="panel-support-note-icon" aria-hidden="true">✓</span> Seguimiento desde una sola lista</div>
+            </div>
+            <a class="panel-module-button panel-module-button-support" href="{{ route('minka.legal') }}">
+                <span>Abrir atención de casos</span><span class="panel-button-arrow" aria-hidden="true">→</span>
+            </a>
+        </article>
     </section>
-
-    <section id="eliminaciones">
-        <h2>Solicitudes de eliminación</h2>
-        <div class="panel-table-wrap"><table>
-            <thead><tr><th>Referencia</th><th>Solicitante</th><th>Empresa</th><th>Estado</th><th>Responsable</th><th>Fecha</th><th></th></tr></thead>
-            <tbody>
-            @forelse($deletionRequests as $item)
-                <tr>
-                    <td>{{ $item->reference }}</td>
-                    <td>{{ $item->full_name }}<br><small>{{ $item->email }}</small></td>
-                    <td>{{ $item->company }}</td>
-                    <td>{{ $caseStatuses['deletion'][$item->status] ?? $item->status }}</td>
-                    <td>{{ $item->responsible_name ?: 'Sin asignar' }}</td>
-                    <td>{{ $item->created_at }}</td>
-                    <td><a href="{{ route('minka.deletion', $item->id) }}">Gestionar</a></td>
-                </tr>
-            @empty
-                <tr><td colspan="7">Todavía no hay solicitudes de eliminación.</td></tr>
-            @endforelse
-            </tbody>
-        </table></div>
-        {{ $deletionRequests->links() }}
-    </section>
-
-    <section>
-        <h2>Evaluaciones</h2>
-        <div class="panel-table-wrap"><table>
-            <thead><tr><th>Empresa</th><th>Contacto</th><th>Plan</th><th>Alta</th><th>Etapa comercial</th><th>Resp. MINKA</th><th>Próxima acción</th><th></th></tr></thead>
-            <tbody>
-            @forelse($applications as $item)
-                <tr><td>{{ $item->company_name }}</td><td>{{ $item->first_name }} {{ $item->last_name }}<br><small>{{ $item->email }}</small></td><td>{{ ucfirst($item->plan_interest) }}</td><td>{{ $item->status }}<br><small>Correo: {{ ['pending' => 'Pendiente', 'sending' => 'En proceso', 'sent' => 'Enviado', 'logged' => 'Solo local', 'failed' => 'Falló'][$item->verification_mail_status] ?? $item->verification_mail_status }}</small></td><td>{{ $salesStages[$item->sales_stage] ?? $item->sales_stage }}</td><td>{{ $item->sales_owner_name ?: 'Sin asignar' }}</td><td>{{ $item->next_follow_up_at ?: 'Sin fecha' }}</td><td><a href="{{ route('minka.application', $item->id) }}">Alta</a><br><a href="{{ route('minka.sales.show', ['solicitud', $item->id]) }}">Seguimiento</a></td></tr>
-            @empty
-                <tr><td colspan="8">Todavía no hay solicitudes.</td></tr>
-            @endforelse
-            </tbody>
-        </table></div>
-        {{ $applications->links() }}
-    </section>
-
-    <section id="contactos">
-        <h2>Contactos y demostraciones</h2>
-        <div class="panel-table-wrap"><table>
-            <thead><tr><th>Empresa</th><th>Persona</th><th>Motivo</th><th>Etapa</th><th>Resp. MINKA</th><th>Próxima acción</th><th></th></tr></thead>
-            <tbody>
-            @forelse($leads as $lead)
-                <tr><td>{{ $lead->company_name }}</td><td>{{ $lead->contact_name }}<br><small>{{ $lead->email }} · {{ $lead->phone }}</small></td><td>{{ $lead->source }}</td><td>{{ $salesStages[$lead->status] ?? $lead->status }}</td><td>{{ $lead->sales_owner_name ?: 'Sin asignar' }}</td><td>{{ $lead->next_follow_up_at ?: 'Sin fecha' }}</td><td><a href="{{ route('minka.sales.show', ['contacto', $lead->id]) }}">Gestionar</a></td></tr>
-            @empty
-                <tr><td colspan="7">Todavía no hay contactos.</td></tr>
-            @endforelse
-            </tbody>
-        </table></div>
-        {{ $leads->links() }}
-    </section>
+    <p class="panel-dashboard-footnote"><span>ORBYNIA</span> · Plataforma operada por MINKA 360 S.A.C.</p>
 </main>
 </body>
 </html>

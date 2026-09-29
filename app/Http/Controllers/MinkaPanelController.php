@@ -75,46 +75,77 @@ class MinkaPanelController extends Controller
     {
         $this->authorizeOperator($request);
         $until = now()->addDays(7);
-        $dueLeads = DB::table('commercial_leads')
-            ->whereNotNull('next_follow_up_at')->where('next_follow_up_at', '<=', $until)
-            ->whereNotIn('status', ['won', 'lost', 'closed'])
-            ->orderBy('next_follow_up_at')->limit(30)
-            ->get(['id', 'company_name', 'next_follow_up_at'])
-            ->map(fn ($item) => (object) [
-                'type' => 'contacto', 'id' => $item->id,
-                'company_name' => $item->company_name, 'next_follow_up_at' => $item->next_follow_up_at,
-            ]);
-        $dueApplications = DB::table('company_applications')
-            ->whereNotNull('next_follow_up_at')->where('next_follow_up_at', '<=', $until)
-            ->whereNotIn('sales_stage', ['won', 'lost', 'closed'])
-            ->orderBy('next_follow_up_at')->limit(30)
-            ->get(['id', 'company_name', 'next_follow_up_at'])
-            ->map(fn ($item) => (object) [
-                'type' => 'solicitud', 'id' => $item->id,
-                'company_name' => $item->company_name, 'next_follow_up_at' => $item->next_follow_up_at,
-            ]);
+        $dueFollowUpsCount = DB::table('commercial_leads')->whereNotNull('next_follow_up_at')
+            ->where('next_follow_up_at', '<=', $until)->whereNotIn('status', ['won', 'lost', 'closed'])->count()
+            + DB::table('company_applications')->whereNotNull('next_follow_up_at')
+                ->where('next_follow_up_at', '<=', $until)->whereNotIn('sales_stage', ['won', 'lost', 'closed'])->count();
 
         return view('panel.dashboard', [
-            'dueFollowUps' => $dueLeads->concat($dueApplications)->sortBy('next_follow_up_at')->take(20),
-            'salesStages' => SalesTrackingController::STAGES,
-            'applications' => DB::table('company_applications')
-                ->leftJoin('users as sales_owner', 'sales_owner.id', '=', 'company_applications.sales_owner_id')
-                ->select('company_applications.*', 'sales_owner.name as sales_owner_name')
-                ->orderByDesc('company_applications.created_at')->paginate(20, ['*'], 'applications'),
-            'leads' => DB::table('commercial_leads')
-                ->leftJoin('users as sales_owner', 'sales_owner.id', '=', 'commercial_leads.sales_owner_id')
-                ->select('commercial_leads.*', 'sales_owner.name as sales_owner_name')
-                ->orderByDesc('commercial_leads.created_at')->paginate(15, ['*'], 'leads'),
-            'complaints' => DB::table('public_complaints')
-                ->leftJoin('users as assigned_user', 'assigned_user.id', '=', 'public_complaints.responsible_operator_id')
-                ->select('public_complaints.*', 'assigned_user.name as responsible_name')
-                ->orderByDesc('public_complaints.created_at')->paginate(15, ['*'], 'complaints'),
-            'deletionRequests' => DB::table('account_deletion_requests')
-                ->leftJoin('users as assigned_user', 'assigned_user.id', '=', 'account_deletion_requests.responsible_operator_id')
-                ->select('account_deletion_requests.*', 'assigned_user.name as responsible_name')
-                ->orderByDesc('account_deletion_requests.created_at')->paginate(15, ['*'], 'deletions'),
-            'caseStatuses' => self::CASE_STATUSES,
+            'commercialCount' => DB::table('commercial_leads')->count() + DB::table('company_applications')->count(),
+            'legalCount' => DB::table('public_complaints')->count() + DB::table('account_deletion_requests')->count(),
+            'dueFollowUpsCount' => $dueFollowUpsCount,
         ]);
+    }
+
+    public function commercial(Request $request): View
+    {
+        $this->authorizeOperator($request);
+        $leads = DB::table('commercial_leads')
+            ->leftJoin('users as sales_owner', 'sales_owner.id', '=', 'commercial_leads.sales_owner_id')
+            ->select([
+                'commercial_leads.id', DB::raw("'contacto' as record_type"), 'commercial_leads.company_name',
+                'commercial_leads.contact_name', 'commercial_leads.email', 'commercial_leads.phone',
+                'commercial_leads.source as detail', 'commercial_leads.status as stage',
+                'sales_owner.name as sales_owner_name', 'commercial_leads.next_follow_up_at', 'commercial_leads.created_at',
+            ]);
+        $applications = DB::table('company_applications')
+            ->leftJoin('users as sales_owner', 'sales_owner.id', '=', 'company_applications.sales_owner_id')
+            ->select([
+                'company_applications.id', DB::raw("'solicitud' as record_type"), 'company_applications.company_name',
+                DB::raw("CONCAT(company_applications.first_name, ' ', company_applications.last_name) as contact_name"),
+                'company_applications.email', 'company_applications.phone', 'company_applications.plan_interest as detail',
+                'company_applications.sales_stage as stage', 'sales_owner.name as sales_owner_name',
+                'company_applications.next_follow_up_at', 'company_applications.created_at',
+            ]);
+        $records = DB::query()->fromSub($leads->unionAll($applications), 'commercial_records')
+            ->orderByDesc('created_at')->paginate(25)->withQueryString();
+
+        $until = now()->addDays(7);
+        $dueFollowUpsCount = DB::table('commercial_leads')->whereNotNull('next_follow_up_at')
+            ->where('next_follow_up_at', '<=', $until)->whereNotIn('status', ['won', 'lost', 'closed'])->count()
+            + DB::table('company_applications')->whereNotNull('next_follow_up_at')
+                ->where('next_follow_up_at', '<=', $until)->whereNotIn('sales_stage', ['won', 'lost', 'closed'])->count();
+
+        return view('panel.commercial', [
+            'records' => $records,
+            'salesStages' => SalesTrackingController::STAGES,
+            'dueFollowUpsCount' => $dueFollowUpsCount,
+        ]);
+    }
+
+    public function legal(Request $request): View
+    {
+        $this->authorizeOperator($request);
+        $complaints = DB::table('public_complaints')
+            ->leftJoin('users as assigned_user', 'assigned_user.id', '=', 'public_complaints.responsible_operator_id')
+            ->select([
+                'public_complaints.id', DB::raw("'complaint' as request_type"), 'public_complaints.reference',
+                DB::raw("CONCAT(public_complaints.first_name, ' ', public_complaints.last_name) as requester_name"),
+                'public_complaints.email', 'public_complaints.complaint_type as subject', 'public_complaints.status',
+                'assigned_user.name as responsible_name', 'public_complaints.created_at',
+            ]);
+        $deletions = DB::table('account_deletion_requests')
+            ->leftJoin('users as assigned_user', 'assigned_user.id', '=', 'account_deletion_requests.responsible_operator_id')
+            ->select([
+                'account_deletion_requests.id', DB::raw("'deletion' as request_type"), 'account_deletion_requests.reference',
+                'account_deletion_requests.full_name as requester_name', 'account_deletion_requests.email',
+                'account_deletion_requests.company as subject', 'account_deletion_requests.status',
+                'assigned_user.name as responsible_name', 'account_deletion_requests.created_at',
+            ]);
+        $cases = DB::query()->fromSub($complaints->unionAll($deletions), 'legal_cases')
+            ->orderByDesc('created_at')->paginate(25)->withQueryString();
+
+        return view('panel.legal', ['cases' => $cases, 'caseStatuses' => self::CASE_STATUSES]);
     }
 
     public function publicCase(Request $request, int $id, string $type): View
@@ -140,7 +171,7 @@ class MinkaPanelController extends Controller
             'statuses' => self::CASE_STATUSES[$type],
             'operators' => DB::table('users')->where('is_minka_operator', true)->orderBy('name')->get(['id', 'name', 'email']),
             'events' => $events,
-            'backRoute' => route('minka.dashboard').'#'.($type === 'complaint' ? 'reclamaciones' : 'eliminaciones'),
+            'backRoute' => route('minka.legal'),
             'updateRoute' => $type === 'complaint'
                 ? route('minka.complaint.update', $id)
                 : route('minka.deletion.update', $id),
