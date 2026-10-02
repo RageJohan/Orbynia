@@ -168,3 +168,55 @@ if (replacementForm) {
         }, 450);
     });
 }
+
+// Microinteracción orbital optimizada con IntersectionObserver (cero consumo fuera del viewport)
+const heroElement = document.querySelector('.hero');
+if (heroElement && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let animFrame = null;
+    let targetTiltX = 0;
+    let targetTiltY = 0;
+    let curTiltX = 0;
+    let curTiltY = 0;
+    let isHeroVisible = true;
+
+    const onMouseMove = (e) => {
+        if (!isHeroVisible) return;
+        const rect = heroElement.getBoundingClientRect();
+        const normX = (e.clientX - rect.left) / rect.width - 0.5;
+        const normY = (e.clientY - rect.top) / rect.height - 0.5;
+        targetTiltX = normX * 10;
+        targetTiltY = normY * 10;
+
+        if (!animFrame) {
+            const step = () => {
+                curTiltX += (targetTiltX - curTiltX) * 0.08;
+                curTiltY += (targetTiltY - curTiltY) * 0.08;
+                heroElement.style.setProperty('--hero-tilt-x', `${curTiltX.toFixed(2)}px`);
+                heroElement.style.setProperty('--hero-tilt-y', `${curTiltY.toFixed(2)}px`);
+
+                if (Math.abs(targetTiltX - curTiltX) > 0.02 || Math.abs(targetTiltY - curTiltY) > 0.02) {
+                    animFrame = requestAnimationFrame(step);
+                } else {
+                    animFrame = null;
+                }
+            };
+            animFrame = requestAnimationFrame(step);
+        }
+    };
+
+    const resetTilt = () => {
+        targetTiltX = 0;
+        targetTiltY = 0;
+    };
+
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            isHeroVisible = entries[0]?.isIntersecting ?? true;
+            if (!isHeroVisible) resetTilt();
+        }, { threshold: 0.1 });
+        observer.observe(heroElement);
+    }
+
+    heroElement.addEventListener('mousemove', onMouseMove, { passive: true });
+    heroElement.addEventListener('mouseleave', resetTilt);
+}
